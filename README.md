@@ -40,15 +40,17 @@ Then open the local URL shown in your terminal (usually `http://localhost:5173`)
 
 ## Project Structure
 
+```
 qr-code-generator/
 ├── src/
-│ ├── App.jsx # Main application logic and UI
-│ ├── App.css # Styling
-│ ├── main.jsx # React entry point
+│   ├── App.jsx        # Main application logic and UI
+│   ├── App.css         # Styling
+│   ├── main.jsx        # React entry point
 ├── public/
-├── screenshots/ # App screenshots
+├── screenshots/         # App screenshots
 ├── package.json
 └── README.md
+```
 
 ## Screenshots
 
