@@ -1,73 +1,128 @@
-# QuickScan — QR Code Generator & Designer
+# QOVA Studio
 
-A browser-based QR code generator built for the GDG on Campus SRM Technical Domain recruitment task. Generate, customize, and download QR codes for URLs, plain text, emails, phone numbers, and WiFi networks — entirely client-side, no backend required.
+A browser-only QR designer for the GDG on Campus SRM frontend task. Create a code, customize its appearance, preview it on a card, and export it as PNG or a real vector SVG.
 
-**Live demo:** [Add your Vercel link here once deployed]
+**Author:** Ankur Bikram Thapa  
+**Repository:** https://github.com/abtcodermilli/qr-code-generator  
+**Deployment:** Add your public Vercel or Netlify URL here after deploying.
 
-## Features
+![QOVA Studio desktop](screenshots/studio-desktop.png)
 
-- **Real-time QR generation** — preview updates instantly as you type
-- **5 QR types** — URL, Text, Email, Phone, WiFi, each with tailored input fields
-- **Full customization** — size, foreground/background color, error correction level, margin/padding, all updating the preview live
-- **Presets** — Classic, Ocean, Sunset, and Dark color combinations, still editable after applying
-- **Download as PNG or SVG** — downloaded file matches the live preview exactly
-- **Input validation** — invalid URLs, emails, and phone numbers are flagged with clear error messages
-- **Scan reliability warnings** — flags customization choices (low contrast, low error correction, low margin) that could affect scannability
-- **Recent QR codes** — last 5 generated codes are saved to localStorage and persist across page refreshes; click one to reload it
-- **Copy to clipboard** — copy the encoded content without downloading
-- **Fully responsive** — works on desktop and mobile screen sizes
+## Run on your Mac
 
-## Tech Stack
-
-- **React** (with Vite) — component structure and state management
-- **JavaScript (JSX)**
-- **qrcode.react** — QR code rendering
-- **CSS** — custom styling, no framework
-- **localStorage** — client-side persistence for recent codes
-
-## Getting Started
-
-Clone the repo and run it locally:
+1. Install Node.js 22.12 or newer (a supported LTS release).
+2. Extract this ZIP, open the extracted project folder in VS Code, and choose **Terminal → New Terminal**.
+3. Run:
 
 ```bash
-git clone https://github.com/abtcodermilli/qr-code-generator.git
-cd qr-code-generator
-npm install
+npm ci
 npm run dev
 ```
 
-Then open the local URL shown in your terminal (usually `http://localhost:5173`).
+Open the localhost URL printed by Vite. Keep the terminal running while using the app. Press Control+C to stop it.
 
-## Project Structure
+Do not double-click `index.html`: React source needs the Vite development server.
 
+## This redesign
+
+The project is now **QOVA — QR Design Studio**, with a larger two-line hero, an original Q brand mark, a campus ticket illustration with a real QR, GDG community examples, ten editable palettes and eight QR patterns. GitHub and LinkedIn links are preserved.
+
+The earlier `qrgenie_studio_v1` and `qrgenie_theme` storage keys are intentionally retained so existing saved designs and theme preferences remain available on the same browser origin. No network or contact details in a demo should be treated as official campus information.
+
+## What is included
+
+- Required types: website URL, text, email, phone, Wi-Fi.
+- Extra type: contact card (vCard 3.0).
+- Real-time input validation and preview. Invalid content removes the code and disables downloads.
+- Ten editable presets: Campus, Mono, Blueprint, Berry, Tidal, Terracotta, Cobalt, Lavender, Copper and Botanical.
+- Eight data patterns: Classic, Soft, Orbit, Pillow, Ribbon, Column, Facet and Petal; square or rounded finder corners.
+- Foreground/background colors and optional two-color gradient.
+- Export size, module-based quiet zone and L/M/Q/H error correction.
+- Local PNG/JPEG/WebP logo upload with high correction enabled automatically.
+- PNG and true vector SVG exported from the same SVG representation used by the preview.
+- Code/card context toggle. **The card is a mockup; exports contain only the QR.**
+- Actionable contrast, quiet-zone, resolution and logo-protection checks.
+- Local collection of 12 saved designs, including complete type-specific fields and visual settings.
+- Persistent light/dark theme, responsive layouts, labeled controls and a keyboard-accessible help dialog.
+- GitHub and LinkedIn links for the author.
+
+The GDG community URL is prefilled so the first visit has a working preview. Every content type also has a **Use campus example** action. Contact, email, phone and Wi-Fi examples are demo data, not official GDG details. **New QR** clears the content. Saving is explicit: choose **Save to collection**. Downloading does not automatically store private content.
+
+## Architecture
+
+| File                | Responsibility                                                                     |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| `src/App.jsx`       | React controls, view navigation, local state, export and logo UI                   |
+| `src/qr.js`         | Validated payload encoding, QR matrix, SVG drawing, scan checks and PNG conversion |
+| `src/storage.js`    | Validate/sanitize saved collection data before restoring it                        |
+| `src/App.css`       | Responsive studio design and theme variables                                       |
+| `tests/qr.test.js`  | Pure-logic and malformed-storage tests                                             |
+| `tests/browser.mjs` | Browser interaction, export decoding, persistence and responsive tests             |
+
+`qrcode-generator` creates the standards-based matrix. The custom SVG renderer draws that matrix using the chosen colors and patterns. Timing and detected alignment patterns remain square in all styles. PNG export rasterizes the same SVG at the selected pixel dimensions. `jsQR` independently decodes exported PNGs in tests.
+
+The QR library is configured to encode UTF-8, so non-English text and emoji are preserved. Error correction, margins, data limits and render failures are handled before exports are enabled. Wi-Fi special characters are escaped; history stores original fields rather than trying to reverse-parse Wi-Fi strings.
+
+## Privacy and limitations
+
+- No backend, accounts, URL shortener, tracking or external QR-generation API.
+- All QR data and logo processing happens in the browser.
+- Saved collection data lives in this browser's `localStorage`. It is not encrypted or synced. **Saved Wi-Fi codes include their passwords.** Delete individual items, clear the collection, or clear browser data to remove them.
+- Existing older `qrgenie_recent` entries are left untouched; this version uses `qrgenie_studio_v1` because complete fields and settings are needed for faithful restoration.
+- Codes are static. Editing a destination requires generating and redistributing a new code.
+- Scan checks are heuristics, not a scan-success percentage. A 4.5:1 contrast threshold is a conservative design heuristic, not a QR certification standard.
+- Automated decoding does not guarantee every camera, print size, lighting condition or custom combination. Test actual exports on a real phone before sharing.
+- Logo uploads are resized to a small raster image; logo SVG exports contain vector QR geometry plus an embedded raster logo.
+- Input payloads are limited to 1,200 UTF-8 bytes. There is no file hosting, batch export or analytics.
+
+## Tests
+
+```bash
+npm test
+npm run lint
+npm run build
 ```
-qr-code-generator/
-├── src/
-│   ├── App.jsx        # Main application logic and UI
-│   ├── App.css         # Styling
-│   ├── main.jsx        # React entry point
-├── public/
-├── screenshots/         # App screenshots
-├── package.json
-└── README.md
+
+Browser tests (first install the browser):
+
+```bash
+npx playwright install chromium
+npm run test:e2e
 ```
+
+The browser script starts and stops its own local Vite server on port 5181. If needed, set `CHROMIUM_PATH` to an installed Chromium executable. It writes updated screenshots under `screenshots/`.
+
+See `TEST_RESULTS.md` for the tested scenarios and `DEMO_GUIDE.md` for a short presentation flow.
+
+## Publish your submission
+
+The recruitment brief requests a deployed frontend, a public GitHub repository and screenshots. The stated deadline in the supplied PDF is **4 October 2026**; it does not specify a time.
+
+1. Back up your existing project. Copy these source files into your local clone, excluding `node_modules` and `dist`.
+2. Run the tests and production build. Check the site locally and scan the exported QR with your phone.
+3. Review your changes, commit them, and push to your own GitHub repository. Include `package-lock.json`, the source and the updated screenshots.
+4. In Vercel or Netlify, import that repository. Use the Vite preset, build command `npm run build`, output directory `dist`, and Node 22.12+.
+5. Test the deployed link on mobile, then replace the deployment placeholder at the top of this README.
+6. Submit the public repository and live URL according to the recruitment form.
+
+No environment variables or backend are needed. This folder does not publish or push itself.
 
 ## Screenshots
 
-![Main generator view](./screenshots/main-view.png)
-![Customization panel](./screenshots/customize.png)
-![Generated QR code](./screenshots/qr-preview.png)
+| Desktop                                    | Light theme                                  |
+| ------------------------------------------ | -------------------------------------------- |
+| ![Desktop](screenshots/studio-desktop.png) | ![Light theme](screenshots/studio-light.png) |
 
-## Design & Implementation Notes
+| Design library                             | Logo and card preview                    |
+| ------------------------------------------ | ---------------------------------------- |
+| ![Presets](screenshots/design-library.png) | ![Context](screenshots/logo-context.png) |
 
-- All QR type-specific data is formatted according to standard QR conventions (e.g. `mailto:`, `tel:`, `WIFI:T:WPA;S:...;P:...;;`) so scanning triggers the correct native app behavior.
-- Validation runs via `useEffect`, checking URL/email/phone format live as the user types, without blocking input.
-- A second `useEffect` evaluates customization choices (error correction level, margin, and foreground/background contrast) to warn users about potential scan reliability issues before they download.
-- Recent codes are deduplicated by value and capped at 5 entries, stored as JSON in `localStorage`.
+[Mobile screenshot](screenshots/studio-mobile.png)
 
-## Author
+## Dependencies and assistance
 
-Built by **Ankur Bikram Thapa** for the GDG on Campus SRM Recruitments 2026-27.
+React, Vite, Lucide and `qrcode-generator` handle UI/runtime, icons and standards-based encoding. Their code remains subject to their own licenses. Playwright, jsQR and pngjs are used for testing.
 
-- [GitHub](https://github.com/abtcodermilli)
-- [LinkedIn](https://www.linkedin.com/in/ankur-bikram-thapa-02a526380)
+This redesign was developed with AI assistance. Review, personalize and understand the code before presenting it; describe that assistance accurately if asked and follow the recruitment team's rules. The supplied brief warns against plagiarism but does not explicitly state an AI-assistance policy.
+
+[GitHub](https://github.com/abtcodermilli) · [LinkedIn](https://www.linkedin.com/in/ankur-bikram-thapa-02a526380)
