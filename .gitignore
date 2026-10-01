@@ -22,3 +22,27 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Archives – never commit zip/tar bundles of the project
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Sensitive files – NEVER commit these
+recovery-codes.txt
+*.recovery
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+
+# Playwright / test artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# OS junk
+Thumbs.db
